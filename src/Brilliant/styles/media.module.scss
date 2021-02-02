@@ -1,0 +1,90 @@
+$mySpotDistance: -2px;
+
+.container {
+    position: relative;
+    display: flex;
+    z-index: 100;
+}
+
+.imgBox {
+    position: relative;
+    cursor: pointer;
+
+    img {
+        width: 100%;
+
+        user-select: none;
+        display: block;
+        position: relative;
+        padding: 2px;
+        box-sizing: border-box;
+    }
+
+    @mixin cool {
+        width: 10px;
+        height: 10px;
+        overflow: hidden;
+        position: absolute;
+        background-color: #09c;
+    }
+
+    .topLeftCool {
+        @include cool;
+        top: $mySpotDistance;
+        left: $mySpotDistance;
+        cursor: nw-resize;
+    }
+
+    .topRightCool {
+        @include cool;
+        top: $mySpotDistance;
+        right: $mySpotDistance;
+        cursor: ne-resize;
+    }
+
+    .bottomRightCool {
+        @include cool;
+        bottom: $mySpotDistance;
+        right: $mySpotDistance;
+        cursor: se-resize;
+    }
+
+    .bottomLeftCool {
+        @include cool;
+        bottom: $mySpotDistance;
+        left: $mySpotDistance;
+        cursor: sw-resize;
+    }
+}
+
+.img-border::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    content: "";
+    border: 1px dashed #09c;
+}
+
+.toolBox {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    display: flex;
+    justify-content: center;
+    transform: translate(-50%, 0);
+    background: #FFF;
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(#000, .2);
+
+    .toolBtn {
+        padding: 4px 8px;
+        background: transparent;
+        font-size: 22px;
+
+        &:hover span svg {
+            color: #09c;
+        }
+    }
+}

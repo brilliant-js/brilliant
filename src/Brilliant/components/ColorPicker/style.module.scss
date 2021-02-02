@@ -1,0 +1,30 @@
+@import '~scssinc';
+
+.bf-colors{
+  box-sizing: content-box;
+  list-style: none;
+  width: 240px;
+  margin: 0;
+  padding: 15px;
+  overflow: hidden;
+  li{
+    box-sizing: content-box;
+    display: block;
+    float: left;
+    width: 24px;
+    height: 24px;
+    margin: 5px;
+    padding: 0;
+    background-color: currentColor;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform .2s;
+    &:hover{
+      transform: scale(1.3);
+    }
+    &.active{
+      box-shadow: 0 0 0 2px $COLOR_ACTIVE;
+    }
+  }
+}

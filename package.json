@@ -1,0 +1,85 @@
+{
+  "name": "brilliant-editor",
+  "author": "global-ai",
+  "version": "1.1.1",
+  "license": "MIT",
+  "homepage": "https://brilliant-js.com",
+  "repository": "https://github.com/brilliant-js/brilliant",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "keywords": ["editor", "typescript", "draft", "draft.js", "scss", "markdown", "WYSIWYG", "react"],
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --passWithNoTests",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "peerDependencies": {
+    "classnames": ">=2",
+    "react": ">=16"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "size-limit": [
+    {
+      "path": "dist/tsdx-brilliant.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/tsdx-brilliant.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.9.1",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-popover": "^0.5.3",
+    "autoprefixer": "^10.2.3",
+    "cssnano": "^4.1.10",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "husky": "^4.3.8",
+    "node-sass": "4.14.1",
+    "postcss": "^8.2.4",
+    "rollup-plugin-postcss": "^4.0.0",
+    "sass": "^1.32.5",
+    "size-limit": "^4.9.1",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.1.0",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "@types/draft-js": "^0.10.44",
+    "classnames": "^2.2.6",
+    "draft-js": "^0.11.7",
+    "draft-js-plugins-editor": "^3.0.0",
+    "draft-js-prism": "^1.0.6",
+    "draft-js-prism-plugin": "^0.1.3",
+    "draftjs-utils": "^0.10.2",
+    "prismjs": "^1.22.0",
+    "remarkable": "^2.0.1",
+    "react-copy-to-clipboard": "^5.0.3",
+    "react-photo-view": "^0.5.2",
+    "react-popover": "^0.5.10",
+    "react-toastify": "^6.2.0",
+    "react-tooltip": "^4.2.13",
+    "state-controller": "^1.3.2"
+  }
+}

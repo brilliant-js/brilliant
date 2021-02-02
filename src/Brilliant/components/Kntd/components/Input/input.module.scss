@@ -1,0 +1,23 @@
+.primary {
+    width: 100%;
+    padding: 6px 11px;
+    font-size: 14px;
+    color: #000;
+    border: 1px solid rgba($color: #000000, $alpha: 0.2);
+    box-sizing: border-box;
+    outline: none;
+    transition: all .3s;
+
+    &:hover {
+        border-color: #40a9ff
+    }
+
+    &:focus {
+        border-color: #40a9ff;
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+    }
+
+    &::placeholder {
+        color: #bfc5d6;
+    }
+}

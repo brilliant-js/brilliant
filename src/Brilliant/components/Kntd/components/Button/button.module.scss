@@ -1,0 +1,75 @@
+.text {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    padding: 4.9px 0;
+    font-size: 18px;
+    border-radius: 2px;
+    border: none;
+    background: #FFF;
+    outline: none;
+    user-select: none;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+        background-color: rgba($color: #000000, $alpha: 0.018);
+    }
+}
+
+.primary {
+    display: inline-block;
+    padding: 4px 15px;
+    border-radius: 2px;
+    color: #fff;
+    background: #1890ff;
+    border: 1px solid #1890ff;
+    box-shadow: none;
+    outline: none;
+    user-select: none;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+        background: #40a9ff;
+        border-color: #40a9ff;
+    }
+}
+
+.ghost {
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    outline: none;
+
+    &:hover {
+        animation: myBtnHover 0.3s;
+        color: #1890ff;
+    }
+
+    @keyframes myBtnHover {
+        from {
+            color: #323845;
+        }
+
+        to {
+            color: #1890ff;
+        }
+    }
+
+}
+
+.link {
+    width: 100%;
+    font-size: 14px;
+    color: #bbb;
+    background-color: #FFF;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: all .3s;
+
+    &:hover {
+        color: #419fdd;
+    }
+}

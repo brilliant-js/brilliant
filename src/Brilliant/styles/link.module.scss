@@ -1,0 +1,32 @@
+.md-editor-toolbar {
+    position: absolute;
+    display: flex;
+    border-radius: 5px;
+    color: #323845;
+    background: #fff;
+    box-shadow: 0 1px 3px 0 #747171;
+    transition: all 0.1s ease;
+    cursor: auto;
+    z-index: 2;
+
+    .linkTitle {
+        box-sizing: border-box;
+        width: 250px;
+        padding: 4px 11px;
+    }
+
+    .linkInput {
+        width: 250px;
+        border: none;
+        box-shadow: none;
+    }
+}
+
+.container {
+    width: 250px;
+    padding: 12px 16px;
+}
+
+.m10 {
+    margin-top: 10px;
+}

@@ -1,0 +1,39 @@
+.uploadBox {
+    padding: 20px;
+    background-color: #fff;
+    border: 1px dashed #bbb;
+    text-align: center;
+    color: #000;
+    transition: all 0.3s;
+    cursor: pointer;
+
+    .titleBox {
+        display: flex;
+        align-items: center;
+
+        .icon {
+            color: #bbb;
+            font-size: 22px;
+            margin-right: 5px;
+        }
+
+        .title {
+            color: #bbb;
+            font-size: 18px;
+        }
+    }
+
+    &:hover {
+        background: rgba($color: #bbb, $alpha: 0.1);
+    }
+}
+
+.flie {
+    display: none;
+}
+
+.linkToImgBox {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}

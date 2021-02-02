@@ -1,0 +1,20 @@
+.emojiBox {
+    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+    width: 235px;
+    height: 180px;
+    padding: 8px;
+    border-radius: 2px;
+    z-index: 100;
+    background: white;
+
+    .emojiIcon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        margin-right: 4px;
+        cursor: pointer;
+    }
+}

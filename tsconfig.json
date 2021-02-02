@@ -1,0 +1,23 @@
+{
+    "include": ["src", "types"],
+    "exclude": [
+        "node_modules",
+        "d.ts"
+    ],
+    "compilerOptions": {
+        "allowJs": true,
+        "target": "es5",
+        "module": "esnext",
+        "lib": ["dom", "esnext"],
+        "allowUnreachableCode": true,
+        "allowUnusedLabels": true,
+        "sourceMap": true,
+        "rootDir": "./src",
+        "strict": false,
+        "noImplicitReturns": false,
+        "moduleResolution": "node",
+        "jsx": "react",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+    }
+}

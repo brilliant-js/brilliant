@@ -1,4 +1,4 @@
-import React, { useState, FC, useMemo, useEffect } from 'react';
+import React, { useState, FC, useMemo, useEffect, memo } from 'react';
 import { EditorState, EditorBlock, Modifier } from 'draft-js';
 import RichIcon from '../RichIcon/RichIcon';
 import Styles from './info.module.scss';
@@ -9,7 +9,7 @@ export interface InfoProps {
   block: { getKey: () => any };
   blockProps: {
     setEditorState: any;
-    getEditorState: EditorState;
+    getEditorState: () => EditorState;
     iconType?: { type: string; index: number };
     setIconType?: any;
     infotype: 'info' | 'success' | 'warn' | 'error';
@@ -18,9 +18,9 @@ export interface InfoProps {
 const InfoBlock: FC<InfoProps> = (props: InfoProps) => {
   const { blockProps, block } = props;
   const { getEditorState, setEditorState, infotype } = blockProps;
-  const editorState = getEditorState;
+    const editorState = getEditorState();
 
-  const [states] = useBrilliantController();
+  const [state] = useBrilliantController();
 
   const IconTypeMap = {
     info: InfoIconType.INFO,
@@ -35,6 +35,7 @@ const InfoBlock: FC<InfoProps> = (props: InfoProps) => {
   const [isShow, setIsShow] = useState(true);
   const iconType = IconTypeMap[infotype];
 
+  
   const backColor = useMemo(() => {
     switch (iconType) {
       case InfoIconType.SUCCESS:
@@ -50,26 +51,22 @@ const InfoBlock: FC<InfoProps> = (props: InfoProps) => {
     }
   }, [iconType]);
 
-  useEffect(() => {
-    const blockKey = block.getKey();
-    if (blockKey !== states.currentKey) setIsShow(false);
-    else setIsShow(true);
-  }, [block, states.currentKey]);
-
-  const onChangeInfoType = (event: Event, newInfoType) => {
+          
+  const onChangeInfoType = (event: Event, newInfoType: string) => {
     event.preventDefault();
     event.stopPropagation();
 
     const blockKey = block.getKey();
     const selection = editorState.getSelection();
-
+    
     const blockSelection = selection.merge({
       anchorKey: blockKey,
       focusKey: blockKey,
     });
 
+    
     let content = editorState.getCurrentContent();
-    content = Modifier.mergeBlockData(content, blockSelection, {
+    content = Modifier.mergeBlockData(content, selection, {
       infotype: IconTypeMap[newInfoType],
     } as any);
 
@@ -78,7 +75,15 @@ const InfoBlock: FC<InfoProps> = (props: InfoProps) => {
       content,
       'change-block-data'
     );
+    setEditorState(newEditorState);
   };
+
+  const infoControlData = [
+    InfoIconType.SUCCESS,
+    InfoIconType.ERROR,
+    InfoIconType.WARN,
+    InfoIconType.INFO,
+  ];
 
   return (
     <div
@@ -87,26 +92,13 @@ const InfoBlock: FC<InfoProps> = (props: InfoProps) => {
     >
       {isShow && (
         <div contentEditable={false} className={Styles.floatTab}>
-          <RichIcon
-            onClick={event => onChangeInfoType(event, InfoIconType.SUCCESS)}
-            style={{ cursor: 'pointer' }}
-            type="icon-wancheng-tianchong"
-          />
-          <RichIcon
-            onClick={event => onChangeInfoType(event, InfoIconType.ERROR)}
-            style={{ cursor: 'pointer' }}
-            type="icon-cuowu-tianchong"
-          />
-          <RichIcon
-            onClick={event => onChangeInfoType(event, InfoIconType.WARN)}
-            style={{ cursor: 'pointer' }}
-            type="icon-dengpao-tianchong"
-          />
-          <RichIcon
-            onClick={event => onChangeInfoType(event, InfoIconType.INFO)}
-            style={{ cursor: 'pointer' }}
-            type="icon-tanhao-tianchong"
-          />
+          {infoControlData.map(type => (
+            <RichIcon
+              onClick={event => onChangeInfoType(event, type)}
+              style={{ cursor: 'pointer' }}
+              type={type}
+            />
+          ))}
           <div style={{ marginTop: '-6px', height: '30px', color: '#ddd' }}>
             |
           </div>
@@ -120,9 +112,14 @@ const InfoBlock: FC<InfoProps> = (props: InfoProps) => {
           type={iconType}
         />
       </div>
-      <EditorBlock className={Styles.content} {...props} />
+      <EditorBlock
+        className={Styles.content}
+        {...props}
+        onInput={e => {
+                  }}
+      />
     </div>
   );
 };
 
-export default InfoBlock;
+export default memo(InfoBlock);

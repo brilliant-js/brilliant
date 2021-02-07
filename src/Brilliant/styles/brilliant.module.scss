@@ -108,16 +108,6 @@ body {
     }
 }
 
-:global {
-
-    .DraftEditor-editorContainer,
-    .DraftEditor-root,
-    .public-DraftEditor-content {
-        overflow: auto;
-        height: 100%;
-    }
-}
-
 .RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
     display: none;
 }
@@ -125,10 +115,9 @@ body {
 .RichEditor-editor .RichEditor-blockquote {
     border-left: 5px solid #eee;
     color: #666;
-    font-family: "Hoefler Text", "Georgia", serif;
-    font-style: italic;
+        font-style: italic;
     margin: 0px 0;
-    padding: 10px 20px;
+    padding: 0px 20px;
 }
 
 .RichEditor-editor .public-DraftStyleDefault-pre {

@@ -130,10 +130,10 @@ const LinkEditComp: FC<LinkEditCompProps> = (props: LinkEditCompProps) => {
           >
             {url}
           </a>
-          <Button type="ghost" onClick={handleEditClick}>
+          <Button type="ghost" onClick={handleEditClick} className={Styles.LinkBtn}>
             <RichIcon type="icon-Edit" />
           </Button>
-          <Button type="ghost" onClick={removeLink}>
+          <Button type="ghost" onClick={removeLink} className={Styles.LinkBtn} style={{ marginRight: 3 }}>
             <RichIcon type="icon-quxiaochaolianjie" />
           </Button>
         </>
@@ -146,10 +146,10 @@ const LinkEditComp: FC<LinkEditCompProps> = (props: LinkEditCompProps) => {
             onChange={e => setValue(e.target.value.trim())}
             className={Styles.linkInput}
           />
-          <Button type="ghost" onClick={editLink}>
+          <Button type="ghost" onClick={editLink} className={Styles.LinkBtn}>
             <RichIcon type="icon-Check" />
           </Button>
-          <Button type="ghost" onClick={handleClose}>
+          <Button type="ghost" onClick={handleClose} className={Styles.LinkBtn} style={{ marginRight: 3 }}>
             <RichIcon type="icon-Close" />
           </Button>
         </>

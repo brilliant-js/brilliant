@@ -1,5 +1,7 @@
 export default {
   controls: {
+    Undo: 'Undo',
+    Redo: 'Redo',
     Clear: 'Clear Style',
     Bold: 'Bold',
     Italic: 'Italic',

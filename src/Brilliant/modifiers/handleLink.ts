@@ -1,7 +1,7 @@
 import insertLink from './insertLink';
 
 const handleLink = (editorState, line) => {
-  const re = /\[([^\]]+)]\(([^)"]+)(?: "([^"]+)")?\)/g;
+  const re = /\[([^\]]+)]\(([^)"]+)(?: "([^"]+)")?\)\s/g;
   let newEditorState = editorState;
   let matchArr;
   do {

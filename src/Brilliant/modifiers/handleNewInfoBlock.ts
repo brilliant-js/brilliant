@@ -1,6 +1,7 @@
+import { EditorState } from 'draft-js';
 import changeCurrentBlockType from './changeCurrentBlockType';
 
-const handleNewInfoBlock = editorState => {
+const handleNewInfoBlock = (editorState: EditorState) => {
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
   const key = selection.getStartKey();

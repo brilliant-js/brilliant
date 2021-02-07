@@ -1,5 +1,7 @@
 export default {
   controls: {
+    Undo: '撤銷',
+    Redo: '重做',
     Clear: '清除格式',
     Bold: '加粗',
     Italic: '斜體',

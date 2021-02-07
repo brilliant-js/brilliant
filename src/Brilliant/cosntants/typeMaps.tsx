@@ -112,6 +112,8 @@ const EventStyleMap = {
   HIGHLIGHT: { EVENT: 'myeditor-highlight', TYPE: 'bgcolor-rgb(247, 145, 48)' },
   FORMATBRUSH: { EVENT: 'myeditor-format-brush', TYPE: 'FORMATBRUSH' },
   CLEARSTYLE: { EVENT: 'myeditor-clearstyle', TYPE: 'CLEARSTYLE' },
+  UNDO: { EVENT: 'myeditor-undo', TYPE: 'UNDO' },
+  REDO: { EVENT: 'myeditor-redo', TYPE: 'REDO' },
   STRIKETHROUGH: {
     EVENT: 'myeditor-inline-strikethrough',
     TYPE: 'STRIKETHROUGH',
@@ -122,6 +124,18 @@ const EventStyleMap = {
 };
 
 const INLINE_STYLES = [
+  {
+    label: 'Undo',
+    style: EventStyleMap.UNDO.TYPE,
+    icon: 'icon-undo1',
+    tipInfo: lang => wrapperTip(lang.controls.Undo, 'Ctrl+Z'),
+  },
+  {
+    label: 'Redo',
+    style: EventStyleMap.REDO.TYPE,
+    icon: 'icon-redo2',
+    tipInfo: lang => wrapperTip(lang.controls.Redo, 'Ctrl+Shift+Z'),
+  },
   {
     label: 'Clear',
     style: EventStyleMap.CLEARSTYLE.TYPE,
@@ -226,7 +240,7 @@ const colorStyleMap = {
     backgroundColor: 'rgba(208, 187, 193, 0.2)',
     borderRadius: '4px',
     lineHeight: 'normal',
-    fontFamily: 'SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace',
+    // fontFamily: 'SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace',
   },
   'bgcolor-rgb(247, 145, 48)': {
     backgroundColor: 'rgb(247, 145, 48)',

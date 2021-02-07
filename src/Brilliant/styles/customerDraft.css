@@ -1,8 +1,8 @@
 .DraftEditor-editorContainer,
 .DraftEditor-root,
 .public-DraftEditor-content {
-  height: inherit;
-  text-align: initial;
+  overflow: auto;
+  height: 100%;
 }
 .public-DraftEditor-content[contenteditable='true'] {
   -webkit-user-modify: read-write-plaintext-only;
@@ -168,4 +168,17 @@
 }
 :global(.Toastify__toast--success){
   background-color: '#89bf37';
+}
+
+*::selection {
+    background: rgba(45, 170, 219, 0.3);
+}
+
+*::selection {
+    background: rgba(45, 170, 219, 0.3);
+}
+
+*::selection {
+    background: rgba(255, 71, 71, 0.3);
+    color: inherit;
 }

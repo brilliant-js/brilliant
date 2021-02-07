@@ -20,14 +20,14 @@ const ImageControls = props => {
             callback={callback}
           />
         ) : (
-          <UploadImg
-            language={language}
-            confirmMedia={confirmMedia}
-            focus={focus}
-            handleImgUpload={handleImgUpload}
-            callback={callback}
-          />
-        )}
+            <UploadImg
+              language={language}
+              confirmMedia={confirmMedia}
+              focus={focus}
+              handleImgUpload={handleImgUpload}
+              callback={callback}
+            />
+          )}
       </div>
       <Button
         type="link"

@@ -21,6 +21,7 @@ const EmojiControls: FC<EmojiControlsProps> = props => {
           key={`emoji_icon_${index}`}
           className={Styles.emojiIcon}
           onClick={e => {
+            e.preventDefault()
             confirmEmoji(emojiIcon, callback);
           }}
         >

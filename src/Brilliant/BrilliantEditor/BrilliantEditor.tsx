@@ -74,6 +74,9 @@ import { BrilliantProps, BetweenLink } from '../types/brilliant';
 import Styles from '../styles/brilliant.module.scss';
 import '../styles/customerDraft.css';
 import '../../asset/prism-themes/prism-shades-of-purple.css';
+import { getSelectionText } from '../utils/getSelectionText';
+
+import '../../asset/iconfont';
 
 const prismPlugin = createPrismPlugin({
   prism: Prism,
@@ -103,10 +106,23 @@ const BrilliantEditor: FC<BrilliantProps> = ({
     readOnly ? readOnly : false
   );
 
-  const [, controller] = useBrilliantController();
+  const [state, controller] = useBrilliantController();
   const editorRefs = useRef(null);
   const editorBoxRefs = useRef(null);
 
+  const handleMouseUp = e => {
+    if (
+      e.clientY > window.innerWidth ||
+      e.clientY < 0 ||
+      e.clientX < 0 ||
+      e.clientX > window.innerHeight
+    ) {
+      setIsSelected(true)
+
+    }
+  };
+
+  
   useEffect(() => {
     controller.setCurrentKey(editorState.getSelection().getStartKey());
     if (onEditorChange) {
@@ -119,12 +135,24 @@ const BrilliantEditor: FC<BrilliantProps> = ({
       if (selectedText) setIsSelected(false);
     } else {
       const selection = editorState.getSelection();
-      if (!selection.isCollapsed()) {
+      const { selectedText } = getContentSelectionAmbient(editorState);
+      if (selectedText) setIsSelected(false);
+                                                if (
+        !selection.isCollapsed() &&
+        selectedText &&
+        !/^\s+$/.test(selectedText)
+      ) {
         setIsSelected(true);
       } else {
         setIsSelected(false);
       }
     }
+    const { selectedText } = getContentSelectionAmbient(editorState);
+        if (/^\s+$/.test(selectedText)) setIsSelected(false);
+    document.addEventListener('mouseup', handleMouseUp, true);
+    return () => {
+      document.removeEventListener('mouseup', handleMouseUp, true);
+    };
   }, [editorState]);
 
   useImperativeHandle(editorRef, () => {
@@ -224,8 +252,19 @@ const BrilliantEditor: FC<BrilliantProps> = ({
       }
 
       return setEditorState(newEditorState);
+    } else if (blockType === 'code-block') {
+      const getText = getSelectionText(editorState);
+      const currentContent = editorState.getCurrentContent();
+      const selection = editorState.getSelection();
+      let newEditorState = EditorState.push(
+        editorState,
+        Modifier.replaceText(currentContent, selection, getText),
+        'insert-characters'
+      );
+      return setEditorState(
+        RichUtils.toggleBlockType(newEditorState, blockType)
+      );
     }
-
     return setEditorState(RichUtils.toggleBlockType(editorState, blockType));
   };
 

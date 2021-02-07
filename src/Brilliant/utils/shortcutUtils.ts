@@ -15,6 +15,7 @@ import handleBlockType from '../modifiers/handleBlockType';
 import handleImage from '../modifiers/handleImage';
 import handleLink from '../modifiers/handleLink';
 import handleNewInfoBlock from '../modifiers/handleNewInfoBlock';
+import handleIntelligentType from '../modifiers/handleIntelligentType';
 
 const objL = {
   '(': ')',

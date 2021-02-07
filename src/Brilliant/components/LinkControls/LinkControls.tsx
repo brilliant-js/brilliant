@@ -68,7 +68,8 @@ const LinkControls: FC<LinkControlsProps> = ({
   const [defaultTitle, setDefaultTitle] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault()
     const { selectedText } = getContentSelectionAmbient(editorState);
     setDefaultTitle(selectedText);
     setIsOpen(true);

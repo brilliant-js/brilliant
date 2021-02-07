@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import Styles from './richIcon.module.scss';
-import './iconfont';
 
 interface IconFontProps {
   type: string;

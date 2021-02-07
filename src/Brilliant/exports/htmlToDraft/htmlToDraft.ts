@@ -192,6 +192,7 @@ function getBlockTypeForTag(tag, lastList) {
     case 'pre':
       return 'code-block';
     case 'div':
+      return 'div';
     case 'p':
       return 'unstyled';
     default:
@@ -404,6 +405,9 @@ function genFragment(
     blockDataMap = blockInfo.data ? Map(blockInfo.data) : Map();
   }
   if (!inBlock && (fragmentBlockTags.indexOf(nodeName) !== -1 || blockType)) {
+    if(getBlockTypeForTag(nodeName, lastList)==='div'){
+    }
+    else{
     chunk = getBlockDividerChunk(
       blockType || getBlockTypeForTag(nodeName, lastList),
       depth,
@@ -411,6 +415,7 @@ function genFragment(
     );
     inBlock = blockType || getBlockTypeForTag(nodeName, lastList);
     newBlock = true;
+    }
   } else if (
     lastList &&
     (inBlock === 'ordered-list-item' || inBlock === 'unordered-list-item') &&
@@ -427,7 +432,6 @@ function genFragment(
     newBlock = true;
     chunk = getSoftNewlineChunk(blockType, depth, true, blockDataMap);
   }
-
   let child = node.firstChild;
 
   if (
@@ -435,7 +439,7 @@ function genFragment(
     inEntity &&
     (blockType === 'atomic' || inBlock === 'atomic')
   ) {
-    child = document.createTextNode('a');
+    child = document.createTextNode(' ');
   }
 
   if (child != null) {
@@ -576,7 +580,6 @@ function getChunkForHTML(
     options,
     undefined
   );
-
   if (chunk.text.indexOf('\r') === 0) {
     chunk = {
       text: chunk.text.slice(1),
@@ -631,6 +634,7 @@ function convertFromHTMLtoContentBlocks(
     options,
     DOMBuilder
   );
+
   if (chunk == null) {
     return [];
   }
@@ -737,6 +741,7 @@ const htmlToDraft = ({
     generateKey
   );
   const blockMap = BlockMapBuilder.createFromArray(contentBlocks);
+
   const firstBlockKey = contentBlocks[0].getKey();
 
   return contentState.merge({
@@ -745,7 +750,7 @@ const htmlToDraft = ({
     selectionAfter: SelectionState.createEmpty(firstBlockKey),
   });
 };
-export const createFromHtml = html => {
+export const createFromHtml = (html: string) => {
   const content = htmlToDraft({})(html);
   return EditorState.createWithContent(content as any);
 };

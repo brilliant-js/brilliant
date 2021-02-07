@@ -47,7 +47,9 @@ const Image: FC<ImageProps> = props => {
   const [move, setMove] = useState<boolean>(false);
   const [moveVisible, setMoveVisible] = useState<boolean>(false);
   const [imgWidth, setImgWidth] = useState<number>(width);
+  const [factWidth, setFactWidth] = useState<number>(imgWidth);
   const [pictureVisible, setPictureVisible] = useState<boolean>(false);
+  const [toolBoxStyle, setToolBoxStyle] = useState({})
   let justifyString = 'center';
   if (alignment) {
     if (alignment === 'left') {
@@ -64,40 +66,34 @@ const Image: FC<ImageProps> = props => {
   }>({
     justifyContent: justifyString,
   });
+
   const [state, controller] = useBrilliantController();
   const { selectionImgKey } = state;
   const { setSelectionImgKey } = controller;
 
   const imgBoxRefs = useRef(null);
-  const imgRefs = useRef(null);
+  const imgFactRefs = useRef(null);
+  const imgVirtualRefs = useRef(null);
+  const imgToolBar = useRef(null);
 
-  const actualWidth = useMemo(() => {
+  const virtualWidth = useMemo(() => {
     if (imgWidth >= maxWidth) return maxWidth;
     return imgWidth;
   }, [imgWidth, maxWidth]);
 
-  const handleImgLond = e => {
-    if (!width) {
-      const naturalWidth = imgRefs?.current?.naturalWidth;
-      setImgWidth(naturalWidth);
+  const handleMove = useCallback(e => {
+    if (move) {
+      const callback = callDown || function b() { };
+      callback.call(this, e);
     }
-  };
+  }, [move]);
 
-  const handleMove = useCallback(
-    e => {
-      if (move) {
-        const callback = callDown || function b() {};
-        callback.call(this, e);
-      }
-    },
-    [move]
-  );
-
-  const handleUp = useCallback(() => {
+  const handleUp = useCallback((e) => {
     const posix = {
       w: imgBoxRefs.current.offsetWidth,
       h: imgBoxRefs.current.offsetHeight,
     };
+
     if (imageKey) {
       contentState.mergeEntityData(imageKey, {
         height: posix.h,
@@ -105,10 +101,19 @@ const Image: FC<ImageProps> = props => {
       });
     }
 
+    if (virtualWidth) setFactWidth(virtualWidth);
+
     if (move) {
+      editorRefs.current.blur();
+      if (imgToolBar.current.offsetWidth > virtualWidth) {
+        setToolBoxStyle({ bottom: -50, left: 0, transform: "none" })
+      } else {
+        setToolBoxStyle({})
+      }
       setMove(false);
     }
-  }, [contentState, imageKey, move]);
+
+  }, [virtualWidth, imageKey, move]);
 
   const handleDown = useCallback((e, direction) => {
     e.stopPropagation();
@@ -133,10 +138,6 @@ const Image: FC<ImageProps> = props => {
     return false;
   }, []);
 
-  const handleClick = useCallback(() => {
-    setMoveVisible(false);
-  }, []);
-
   const handleKeyDown = useCallback(
     e => {
       if (moveVisible && e.keyCode === 8) {
@@ -147,17 +148,51 @@ const Image: FC<ImageProps> = props => {
   );
 
   useEffect(() => {
+    const handleClick = () => {
+      if (!move) setMoveVisible(false);
+    }
     document.addEventListener('click', handleClick);
-    document.addEventListener('mousemove', handleMove);
-    document.addEventListener('mouseup', handleUp);
-    document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('click', handleClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('mousemove', handleMove);
+    return () => {
       document.removeEventListener('mousemove', handleMove);
-      document.removeEventListener('mouseup', handleUp);
+    };
+  }, [handleMove]);
+
+  useEffect(() => {
+    document.addEventListener('mouseup', handleUp, true);
+    return () => {
+      document.removeEventListener('mouseup', handleUp, true);
+    };
+  }, [handleUp])
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleClick, handleKeyDown, handleMove, handleUp]);
+  }, [handleKeyDown])
+
+  useEffect(() => {
+    if (selectionImgKey !== imageKey) setMoveVisible(false);
+  }, [imageKey, selectionImgKey]);
+
+  useEffect(() => {
+    const width = imgFactRefs.current.offsetWidth;
+    setImgWidth(width)
+  }, [factWidth])
+
+  const handleImgLond = e => {
+    if (!width) {
+      const naturalWidth = imgFactRefs?.current?.naturalWidth;
+      setImgWidth(naturalWidth);
+    }
+  };
 
   const handleImgBoxClick = (e, key) => {
     e.stopPropagation();
@@ -170,9 +205,9 @@ const Image: FC<ImageProps> = props => {
     }
   };
 
-  useEffect(() => {
-    if (selectionImgKey !== imageKey) setMoveVisible(false);
-  }, [imageKey, selectionImgKey]);
+  const handleImgDobleClick = () => {
+    if (!readOnly) setPictureVisible(true)
+  }
 
   const handleToolBarBtnClick = (e, text) => {
     e.stopPropagation();
@@ -207,14 +242,12 @@ const Image: FC<ImageProps> = props => {
 
   const hanleImageSizeCLick = (e, sizeText) => {
     e.stopPropagation();
-    const naturalWidth = imgRefs?.current?.naturalWidth || 67;
+    const naturalWidth = imgFactRefs?.current?.naturalWidth || 67;
     const newWidth = naturalWidth * sizeText;
-    setImgWidth(newWidth);
+    setFactWidth(newWidth);
   };
 
-  const imgBoxClass = `${Styles.imgBox} ${
-    moveVisible ? Styles['img-border'] : null
-  }`;
+  const virtualBoxClass = `${Styles.virtualBox} ${moveVisible ? Styles['img-border'] : null}`;
 
   return (
     <div
@@ -224,66 +257,68 @@ const Image: FC<ImageProps> = props => {
       style={containerStyles}
       data-key={imageKey}
     >
-      <div
-        className={imgBoxClass}
-        ref={imgBoxRefs}
-        style={{ width: actualWidth }}
-      >
-        <img src={src} alt={alt} ref={imgRefs} onLoad={handleImgLond} />
-        <Picture
-          visible={pictureVisible}
-          setVisible={setPictureVisible}
-          photoImages={[src]}
-        />
-        {moveVisible && (
-          <>
-            {COOL_MAPS.map((cool, index) => (
+      <div className={Styles.imgBox} style={{ width: factWidth }}>
+        <img src={src} alt={alt} ref={imgFactRefs} className={Styles.fact} onLoad={handleImgLond} />
+
+        <div ref={imgBoxRefs} className={Styles.virtual} style={{ width: virtualWidth }}>
+          <div className={virtualBoxClass} onDoubleClick={handleImgDobleClick}>
+            <img src={src} ref={imgVirtualRefs} style={{ visibility: move ? "visible" : "hidden" }} />
+            {moveVisible && COOL_MAPS.map((cool, index) => (
               <span
                 key={`${cool.class}_${index}`}
                 className={Styles[cool.class]}
                 onMouseDown={e => handleDown(e, cool.direction)}
               />
             ))}
-            <div className={Styles.toolBox}>
-              {IMAGE_SIZE_MAPS.map((sizeObj, index) => (
-                <Button
-                  type="link"
-                  key={`image_size_${index}`}
-                  onClick={e => hanleImageSizeCLick(e, sizeObj.proportion)}
-                  style={{ background: 'transparent', fontSize: 18 }}
-                  className={Styles.toolBtn}
-                >
-                  <RichIcon type={sizeObj.icon} />
-                </Button>
-              ))}
-              {TOOLBAR_NODE_MAPS.map((node, index) => (
-                <Button
-                  type="link"
-                  key={`${node.iconName}_${index}`}
-                  className={Styles.toolBtn}
-                  onClick={e => handleToolBarBtnClick(e, node.justifyContent)}
-                >
-                  <RichIcon type={node.iconName} />
-                </Button>
-              ))}
+          </div>
+        </div>
+
+        {moveVisible && (
+          <div className={Styles.toolBox} ref={imgToolBar} style={toolBoxStyle}>
+            {IMAGE_SIZE_MAPS.map((sizeObj, index) => (
               <Button
                 type="link"
+                key={`image_size_${index}`}
+                onClick={e => hanleImageSizeCLick(e, sizeObj.proportion)}
+                style={{ background: 'transparent', fontSize: 18 }}
                 className={Styles.toolBtn}
-                onClick={() => setPictureVisible(true)}
               >
-                <RichIcon type="icon-quanping" />
+                <RichIcon type={sizeObj.icon} />
               </Button>
+            ))}
+            {TOOLBAR_NODE_MAPS.map((node, index) => (
               <Button
                 type="link"
+                key={`${node.iconName}_${index}`}
                 className={Styles.toolBtn}
-                onClick={handleRemove}
+                onClick={e => handleToolBarBtnClick(e, node.justifyContent)}
               >
-                <RichIcon type="icon-shanchu" />
+                <RichIcon type={node.iconName} />
               </Button>
-            </div>
-          </>
+            ))}
+            <Button
+              type="link"
+              className={Styles.toolBtn}
+              onClick={() => setPictureVisible(true)}
+            >
+              <RichIcon type="icon-quanping" />
+            </Button>
+            <Button
+              type="link"
+              className={Styles.toolBtn}
+              onClick={handleRemove}
+            >
+              <RichIcon type="icon-shanchu" />
+            </Button>
+          </div>
         )}
+
       </div>
+      <Picture
+        visible={pictureVisible}
+        setVisible={setPictureVisible}
+        photoImages={[src]}
+      />
     </div>
   );
 };

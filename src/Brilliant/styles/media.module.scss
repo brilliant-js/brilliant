@@ -1,4 +1,4 @@
-$mySpotDistance: -2px;
+$mySpotDistance: -4px;
 
 .container {
     position: relative;
@@ -10,14 +10,30 @@ $mySpotDistance: -2px;
     position: relative;
     cursor: pointer;
 
-    img {
-        width: 100%;
-
-        user-select: none;
+    .fact {
         display: block;
         position: relative;
-        padding: 2px;
+        width: 100%;
         box-sizing: border-box;
+        user-select: none;
+    }
+}
+
+
+.virtual {
+    position: absolute;
+    top: 0;
+
+    .virtualBox {
+        position: absolute;
+        width: 100%;
+
+        img {
+            display: block;
+            width: 100%;
+            user-select: none;
+            opacity: 0.7;
+        }
     }
 
     @mixin cool {
@@ -59,24 +75,25 @@ $mySpotDistance: -2px;
 
 .img-border::before {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    top: -2px;
+    bottom: -2px;
+    left: -2px;
+    right: -2px;
     content: "";
     border: 1px dashed #09c;
 }
 
 .toolBox {
+    display: flex;
+    justify-content: center;
     position: absolute;
     bottom: 20px;
     left: 50%;
-    display: flex;
-    justify-content: center;
     transform: translate(-50%, 0);
     background: #FFF;
     border-radius: 4px;
     box-shadow: 0 5px 15px rgba(#000, .2);
+    user-select: none;
 
     .toolBtn {
         padding: 4px 8px;

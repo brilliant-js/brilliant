@@ -104,26 +104,55 @@ export class FluentMarkdownPlugin {
     eventTimeStamp: number,
     { setEditorState }: PluginFunctions
   ): DraftHandleValue => {
-    if (character !== ' ') return 'not-handled';
-    const currentSelection = editorState.getSelection();
-    const key = currentSelection.getStartKey();
+        const IntelligentTypeObj = {
+      '"': '"',
+      '[': ']',
+      '{': '}',
+      "'": "'",
+      '(': ')',
+    };
+    const contentState = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    const key = selection.getStartKey();
+    const currentBlock = contentState.getBlockForKey(key);
+    const type = currentBlock.getType();
+    let newEditorState = editorState;
+    if (type === 'code-block' && IntelligentTypeObj[character]) {
+                  newEditorState = EditorState.push(
+        editorState,
+        Modifier.insertText(
+          contentState,
+          selection,
+          `${character}${IntelligentTypeObj[character]}`
+        ),
+        'insert-characters'
+      );
+            let newSelection = newEditorState.getSelection();
+      newSelection = newSelection.merge({
+        anchorOffset: newSelection.get('anchorOffset') - 1,
+        focusOffset: newSelection.get('anchorOffset') - 1,
+      });
+      newEditorState = EditorState.acceptSelection(
+        newEditorState,
+        newSelection
+      );
+      setEditorState(newEditorState);
+      return 'handled';
+    }
+
+    
     const text = editorState
       .getCurrentContent()
       .getBlockForKey(key)
       .getText();
-    const position = currentSelection.getAnchorOffset();
+    const position = selection.getAnchorOffset();
     const line = [
       text.slice(0, position),
       character,
       text.slice(position),
     ].join('');
-
-    const newEditorState = checkCharacterForState(
-      editorState,
-      line,
-      setEditorState
-    );
-    if (editorState !== newEditorState) {
+            newEditorState = checkCharacterForState(editorState, line, setEditorState);
+        if (editorState !== newEditorState) {
       setEditorState(newEditorState);
       return 'handled';
     }
@@ -227,10 +256,8 @@ export class FluentMarkdownPlugin {
           component: InfoBlock,
           props: {
             setEditorState,
-            renderLanguageSelect: CodeLanguageSelect,
-            languages: defaultLanguages,
             infotype: block.getData().get('infotype'),
-            getEditorState: editorState,
+            getEditorState: () => editorState,
           },
         };
       }
